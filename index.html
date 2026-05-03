@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>生日快乐哦宝贝🎂</title>
+
+<!-- 字体 -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Noto Sans SC', sans-serif;
+    background: url("bg1.jpg") no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    color: #222;
+    overflow-x: hidden;
+}
+
+/* 黑色遮罩（提升对比度） */
+body::before {
+    content: "";
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* 烟花 */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* 每一屏 */
+.section {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* 标题 */
+h1 {
+    font-size: 48px;
+    font-family: 'KaiTi', 'STKaiti', serif;
+}
+
+/* 文字 */
+p {
+    font-size: 24px;
+    font-family: 'ZCOOL KuaiLe', cursive;
+    line-height: 1.6;
+}
+
+/* 左右布局 */
+.split {
+    display: flex;
+    gap: 60px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 左边文字 */
+.text-box {
+    flex: 1;
+    max-width: 420px;
+    text-align: center;
+    line-height: 1.8;
+}
+
+/* 打字机 */
+#typing {
+    font-size: 22px;
+}
+
+/* 右边照片 */
+.photo-box {
+    flex: 1;
+    position: relative;
+    height: 300px;
+    perspective: 1000px;
+}
+
+/* 翻页卡片 */
+.flip-card {
+    position: absolute;
+    width: 220px;
+    height: 280px;
+    opacity: 0;
+    transform: rotateY(-180deg);
+    transition: 1s;
+}
+
+.flip-card.active {
+    opacity: 1;
+    transform: rotateY(0deg);
+}
+
+/* 图片 */
+.flip-card img {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    object-fit: cover;
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+/* 淡入 */
+.fade {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: 1s;
+}
+
+.fade.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 手机 */
+@media (max-width: 768px) {
+    .split {
+        flex-direction: column;
+    }
+
+    .text-box {
+        text-align: center;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+    <source src="Feels Like You.mp3">
+</audio>
+
+<canvas id="canvas"></canvas>
+
+<!-- 第一屏 -->
+<div class="section">
+    <div>
+        <h1>生日快乐呀我的宝贝🎂❤️</h1>
+        <p>记得开声音然后点一下页面哦o( =•ω•= )m</p>
+        <p>这是一封属于你的电子信 💌</p>
+        <p>👇 继续往下滑哦！</p>
+    </div>
+</div>
+
+<!-- 第二屏 -->
+<div class="section fade">
+    <div class="split">
+
+        <div class="text-box">
+            <div id="typing"></div>
+        </div>
+
+        <div class="photo-box">
+            <div class="flip-card active"><img src="photo 1.jpeg"></div>
+            <div class="flip-card"><img src="photo 2.jpeg"></div>
+            <div class="flip-card"><img src="photo 3.jpeg"></div>
+            <div class="flip-card"><img src="photo 4.jpeg"></div>
+            <div class="flip-card"><img src="photo 5.jpeg"></div>
+            <div class="flip-card"><img src="photo 6.jpeg"></div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+/* 音乐 */
+document.body.addEventListener("click", () => {
+    document.getElementById("music").play();
+}, { once: true });
+
+/* 打字机 */
+const text = "谢谢你出现在我的世界里❤️\n陪我疯陪我闹✨\n未来的每一天\n我都想陪着你走下去💖\n生日快乐宝贝💕\n爱你呀我的大笨蛋Σ>―(〃°ω°〃)♡→";
+let i = 0;
+
+function typing() {
+    if (i < text.length) {
+        document.getElementById("typing").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typing, 80);
+    }
+}
+typing();
+
+/* 翻页 */
+let cards = document.querySelectorAll(".flip-card");
+let index = 0;
+
+setInterval(() => {
+    cards[index].classList.remove("active");
+    index = (index + 1) % cards.length;
+    cards[index].classList.add("active");
+}, 2500);
+
+/* 淡入 */
+const fades = document.querySelectorAll(".fade");
+
+window.addEventListener("scroll", () => {
+    fades.forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight - 100) {
+            el.classList.add("show");
+        }
+    });
+});
+
+/* 烟花（已修复不闪） */
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let fireworks = [];
+
+class Firework {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height;
+        this.targetY = Math.random() * canvas.height / 2;
+        this.particles = [];
+        this.exploded = false;
+    }
+
+    update() {
+        if (!this.exploded) {
+            this.y -= 5;
+            if (this.y <= this.targetY) {
+                this.exploded = true;
+                for (let i = 0; i < 60; i++) {
+                    this.particles.push(new Particle(this.x, this.y));
+                }
+            }
+        } else {
+            this.particles.forEach(p => p.update());
+        }
+    }
+
+    draw() {
+        if (!this.exploded) {
+            ctx.fillStyle = "white";
+            ctx.fillRect(this.x, this.y, 2, 5);
+        } else {
+            this.particles.forEach(p => p.draw());
+        }
+    }
+}
+
+class Particle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.speedX = (Math.random() - 0.5) * 6;
+        this.speedY = (Math.random() - 0.5) * 6;
+        this.alpha = 1;
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.alpha -= 0.02;
+    }
+
+    draw() {
+        ctx.fillStyle = "rgba(255,255,255," + this.alpha + ")";
+        ctx.fillRect(this.x, this.y, 2, 2);
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); /* ⭐关键修复 */
+
+    if (Math.random() < 0.05) {
+        fireworks.push(new Firework());
+    }
+
+    fireworks.forEach(fw => {
+        fw.update();
+        fw.draw();
+    });
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+
+</body>
+</html>
