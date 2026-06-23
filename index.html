@@ -66,7 +66,15 @@ p {
     align-items: center;     /* 垂直居中 */
 }
 
-/* 左右 */
+/*上下*/
+.split {
+    display: flex;
+    flex-direction: column; /* 👈 变上下排列 */
+    gap: 40px;
+    max-width: 1000px;
+    margin: auto;
+    align-items: center;
+}
 
 .text-box {
     flex: 1;
@@ -77,15 +85,20 @@ p {
 
 #typing {
     font-size: 22px;
-    max-width: 800px;
+    max-width: 280px;   /* 👈 控制每行长度 */
+    margin: 0 auto;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 /* 照片 */
 .photo-box {
-    flex: 1;
+    flex: none;
     position: relative;
     height: 300px;
     perspective: 1000px;
+    display: flex;
+    justify-content: center;
 }
 
 .flip-card {
