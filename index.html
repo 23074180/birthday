@@ -66,7 +66,7 @@ p {
     align-items: center;     /* 垂直居中 */
 }
 
-/*上下*/
+/* 上下 */
 .split {
     display: flex;
     flex-direction: column; /* 👈 变上下排列 */
@@ -272,7 +272,7 @@ function typing() {
     if (i < text.length) {
         document.getElementById("typing").innerHTML += text.charAt(i);
         i++;
-        setTimeout(typing, 280);
+        setTimeout(typing, 250);
     }
 }
 typing();
